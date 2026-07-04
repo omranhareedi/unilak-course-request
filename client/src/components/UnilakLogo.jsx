@@ -2,7 +2,7 @@ export default function UnilakLogo({ size = 40, showText = true }) {
   return (
     <div className="flex items-center gap-2">
       <img
-        src="/unilak-logo.png"
+        src="/unilak-logo.jpg"
         alt="UNILAK"
         width={size}
         height={size}
