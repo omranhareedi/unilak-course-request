@@ -15,7 +15,7 @@ export const sendAcceptanceEmail = async (to, name, department) => {
     <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #f9fafb; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
       <div style="background: linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%); padding: 32px 24px; text-align: center;">
         <h1 style="color: #fff; margin: 0; font-size: 22px; letter-spacing: 0.5px;">UNILAK</h1>
-        <p style="color: #a7f3d0; margin: 4px 0 0; font-size: 14px;">University of Kigali</p>
+        <p style="color: #a7f3d0; margin: 4px 0 0; font-size: 14px;">University of Lay Adventists of Kigali</p>
       </div>
       <div style="padding: 32px 24px; background: #fff;">
         <h2 style="color: #059669; font-size: 18px; margin: 0 0 12px;">Application Accepted ✓</h2>
@@ -29,7 +29,7 @@ export const sendAcceptanceEmail = async (to, name, department) => {
         <p style="color: #6b7280; font-size: 13px; line-height: 1.5; margin: 0;">If you have any questions, reply to this email or contact the department directly.</p>
       </div>
       <div style="background: #f3f4f6; padding: 16px 24px; text-align: center; border-top: 1px solid #e5e7eb;">
-        <p style="color: #9ca3af; font-size: 12px; margin: 0;">© ${new Date().getFullYear()} UNILAK — University of Kigali. All rights reserved.</p>
+        <p style="color: #9ca3af; font-size: 12px; margin: 0;">© ${new Date().getFullYear()} UNILAK — University of Lay Adventists of Kigali. All rights reserved.</p>
       </div>
     </div>
   `;
@@ -47,7 +47,7 @@ export const sendRejectionEmail = async (to, name, department, reason) => {
     <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #f9fafb; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
       <div style="background: linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%); padding: 32px 24px; text-align: center;">
         <h1 style="color: #fff; margin: 0; font-size: 22px; letter-spacing: 0.5px;">UNILAK</h1>
-        <p style="color: #a7f3d0; margin: 4px 0 0; font-size: 14px;">University of Kigali</p>
+        <p style="color: #a7f3d0; margin: 4px 0 0; font-size: 14px;">University of Lay Adventists of Kigali</p>
       </div>
       <div style="padding: 32px 24px; background: #fff;">
         <h2 style="color: #dc2626; font-size: 18px; margin: 0 0 12px;">Application Update</h2>
@@ -57,7 +57,7 @@ export const sendRejectionEmail = async (to, name, department, reason) => {
         <p style="color: #374151; line-height: 1.6; margin: 0 0 4px;">If you believe this is an error or would like further clarification, please visit the department office or contact us.</p>
       </div>
       <div style="background: #f3f4f6; padding: 16px 24px; text-align: center; border-top: 1px solid #e5e7eb;">
-        <p style="color: #9ca3af; font-size: 12px; margin: 0;">© ${new Date().getFullYear()} UNILAK — University of Kigali. All rights reserved.</p>
+        <p style="color: #9ca3af; font-size: 12px; margin: 0;">© ${new Date().getFullYear()} UNILAK — University of Lay Adventists of Kigali. All rights reserved.</p>
       </div>
     </div>
   `;

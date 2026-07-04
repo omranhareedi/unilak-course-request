@@ -6,7 +6,7 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-bold text-lg mb-2">UNILAK</h3>
             <p className="text-sm leading-relaxed">
-              University of Kigali — Course Request Portal. Streamlining departmental enrollments for students and staff.
+              University of Lay Adventists of Kigali — Smart Queuing System for campus services.
             </p>
           </div>
           <div>
@@ -27,7 +27,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-600 mt-8 pt-6 text-center text-xs text-gray-400">
-          &copy; {new Date().getFullYear()} University of Kigali — UNILAK. All rights reserved.
+          &copy; {new Date().getFullYear()} University of Lay Adventists of Kigali — UNILAK. All rights reserved.
         </div>
       </div>
     </footer>

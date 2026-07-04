@@ -7,7 +7,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 py-20 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm mb-6">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            University of Kigali — Smart Queue System
+            University of Lay Adventists of Kigali — Smart Queue System
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
             Smart Queuing
