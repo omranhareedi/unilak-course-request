@@ -26,11 +26,8 @@ export function AuthProvider({ children }) {
     if (role === 'student') {
       url = '/api/students/login';
       body = { registrationNumber: form.registrationNumber, email: form.email };
-    } else if (role === 'staff') {
-      url = '/api/queue/staff/login';
-      body = { email: form.email, password: form.password };
     } else {
-      url = '/api/admin/login';
+      url = '/api/queue/staff/login';
       body = { email: form.email, password: form.password };
     }
 
@@ -43,22 +40,20 @@ export function AuthProvider({ children }) {
     if (!res.ok) throw new Error(data.error || 'Login failed');
 
     localStorage.clear();
-    const user = data.student || data.staff || data.admin || { email: form.email };
+    const user = data.student || data.staff || { email: form.email };
     localStorage.setItem('role', role);
     localStorage.setItem('user', JSON.stringify(user));
 
     if (role === 'student') {
       localStorage.setItem('studentToken', data.token);
       localStorage.setItem('studentReg', user.registrationNumber);
-    } else if (role === 'staff') {
+    } else {
       localStorage.setItem('staffToken', data.token);
       localStorage.setItem('staffName', user.name);
-    } else {
-      localStorage.setItem('token', data.token);
     }
 
     setAuth({ role, token: data.token, user });
-    return { role, redirect: role === 'student' ? '/student/dashboard' : role === 'staff' ? '/staff/dashboard' : '/admin/dashboard' };
+    return { role, redirect: role === 'student' ? '/student/dashboard' : '/staff/dashboard' };
   };
 
   const logout = () => {

@@ -29,10 +29,10 @@ export default function App() {
             <Route path="/queue" element={<StudentQueue />} />
             <Route path="/queue/status" element={<QueueStatus />} />
             <Route path="/display" element={<PublicDisplay />} />
-            <Route path="/admin/dashboard" element={<ProtectedRoute role="admin"><Dashboard /></ProtectedRoute>} />
-            <Route path="/admin/analytics" element={<ProtectedRoute role="admin"><AdminAnalytics /></ProtectedRoute>} />
-            <Route path="/student/dashboard" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
             <Route path="/staff/dashboard" element={<ProtectedRoute role="staff"><StaffDashboard /></ProtectedRoute>} />
+            <Route path="/staff/courses" element={<ProtectedRoute role="staff"><Dashboard /></ProtectedRoute>} />
+            <Route path="/staff/analytics" element={<ProtectedRoute role="staff"><AdminAnalytics /></ProtectedRoute>} />
+            <Route path="/student/dashboard" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
           </Routes>
         </main>
         <Footer />

@@ -5,8 +5,7 @@ import UnilakLogo from '../components/UnilakLogo';
 
 const roles = [
   { key: 'student', label: 'Student', desc: 'Track your queue tokens' },
-  { key: 'staff', label: 'Staff', desc: 'Manage your department queue' },
-  { key: 'admin', label: 'Admin', desc: 'System administration' },
+  { key: 'staff', label: 'Staff', desc: 'Queue management, course requests &amp; analytics' },
 ];
 
 export default function Login() {
@@ -91,7 +90,7 @@ export default function Login() {
             </>
           )}
 
-          {(tab === 'staff' || tab === 'admin') && (
+          {tab === 'staff' && (
             <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
@@ -99,7 +98,7 @@ export default function Login() {
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))}
-                  placeholder={tab === 'admin' ? 'admin@unilak.ac.rw' : 'staff@unilak.ac.rw'}
+                  placeholder="staff@unilak.ac.rw"
                   className="input-field"
                   required
                 />
@@ -115,9 +114,7 @@ export default function Login() {
                   required
                 />
               </div>
-              {tab === 'staff' && (
-                <p className="text-xs text-gray-400">Demo: alice@unilak.ac.rw / staff123</p>
-              )}
+              <p className="text-xs text-gray-400">Demo: alice@unilak.ac.rw / staff123</p>
             </>
           )}
 
