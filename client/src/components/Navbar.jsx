@@ -3,10 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 
 const links = [
   { to: '/', label: 'Home' },
-  { to: '/apply', label: 'Apply' },
-  { to: '/status', label: 'Check Status' },
+  { to: '/queue', label: 'Join Queue' },
+  { to: '/queue/status', label: 'My Tokens' },
   { to: '/student/login', label: 'My Dashboard' },
+  { to: '/staff/login', label: 'Staff' },
   { to: '/admin', label: 'Admin' },
+  { to: '/display', label: 'Live Display' },
 ];
 
 export default function Navbar() {
@@ -29,7 +31,7 @@ export default function Navbar() {
               <Link
                 key={l.to}
                 to={l.to}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   pathname === l.to
                     ? 'bg-unilak-navy text-white'
                     : 'text-gray-600 hover:text-unilak-navy hover:bg-gray-50'
