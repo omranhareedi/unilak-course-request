@@ -2,12 +2,11 @@ export default function UnilakLogo({ size = 40, showText = true }) {
   return (
     <div className="flex items-center gap-2">
       <img
-        src="/unilak-logo.jpeg"
+        src="/unilak-logo.png"
         alt="UNILAK"
         width={size}
         height={size}
-        className="rounded-lg"
-        style={{ objectFit: 'contain' }}
+        className="object-contain"
       />
       {showText && (
         <div className="leading-tight">
