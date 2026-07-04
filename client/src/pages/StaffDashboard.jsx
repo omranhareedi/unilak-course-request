@@ -4,8 +4,8 @@ import { io } from 'socket.io-client';
 
 const statusStyles = {
   waiting: 'bg-yellow-100 text-yellow-800',
-  called: 'bg-blue-100 text-blue-800',
-  serving: 'bg-purple-100 text-purple-800',
+  called: 'bg-blue-50 text-unilak-navy',
+  serving: 'bg-green-50 text-unilak-green',
 };
 
 export default function StaffDashboard() {
@@ -163,20 +163,20 @@ export default function StaffDashboard() {
                   {t.status === 'called' && (
                     <button onClick={() => doAction(`/${t._id}/start-serving`, t._id)}
                       disabled={actionId === t._id}
-                      className="bg-purple-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-purple-700 disabled:opacity-50">
+                      className="bg-unilak-green text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-green-700 disabled:opacity-50">
                       Start Serving
                     </button>
                   )}
                   {t.status === 'waiting' && (
                     <button onClick={() => doAction(`/${t._id}/recall`, t._id)}
                       disabled={actionId === t._id}
-                      className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-blue-700 disabled:opacity-50">
+                      className="bg-unilak-navy text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-blue-900 disabled:opacity-50">
                       Recall
                     </button>
                   )}
                   <button onClick={() => doAction(`/${t._id}/skip`, t._id)}
                     disabled={actionId === t._id}
-                    className="bg-orange-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-orange-600 disabled:opacity-50">
+                    className="bg-unilak-gold text-unilak-navy px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-yellow-400 disabled:opacity-50">
                     Skip
                   </button>
                   <button onClick={() => doAction(`/${t._id}/no-show`, t._id)}

@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 
 const statusColors = {
-  called: 'bg-blue-600',
-  serving: 'bg-green-600',
+  called: 'bg-unilak-gold',
+  serving: 'bg-unilak-green',
 };
 
 export default function PublicDisplay() {
@@ -86,7 +86,7 @@ export default function PublicDisplay() {
                 <h2 className="text-xl font-semibold text-gray-200 mb-1">{d.department}</h2>
                 <p className="text-sm text-gray-400 mb-4">{d.waitingCount} waiting</p>
                 {d.current ? (
-                  <div className={`${statusColors[d.current.status] || 'bg-blue-600'} rounded-xl p-6 transition-all duration-300`}>
+                  <div className={`${statusColors[d.current.status] || 'bg-unilak-navy'} rounded-xl p-6 transition-all duration-300`}>
                     <div className="text-5xl font-extrabold tracking-wider">{d.current.fullToken}</div>
                     <div className="text-sm mt-2 opacity-80">{d.current.studentReg}</div>
                     <div className="text-xs mt-1 opacity-60 uppercase">{d.current.status === 'called' ? 'Please Proceed' : 'Being Served'}</div>

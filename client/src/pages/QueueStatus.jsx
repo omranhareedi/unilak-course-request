@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 
 const statusStyles = {
   waiting: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  called: 'bg-blue-100 text-blue-800 border-blue-200',
-  serving: 'bg-purple-100 text-purple-800 border-purple-200',
+  called: 'bg-blue-50 text-unilak-navy border-blue-200',
+  serving: 'bg-green-50 text-unilak-green border-green-200',
   completed: 'bg-green-100 text-green-800 border-green-200',
   skipped: 'bg-red-100 text-red-800 border-red-200',
   no_show: 'bg-gray-100 text-gray-600 border-gray-200',
-  transferred: 'bg-orange-100 text-orange-800 border-orange-200',
+  transferred: 'bg-yellow-50 text-unilak-gold border-yellow-300',
 };
 
 export default function QueueStatus() {
