@@ -5,6 +5,7 @@ const links = [
   { to: '/', label: 'Home' },
   { to: '/apply', label: 'Apply' },
   { to: '/status', label: 'Check Status' },
+  { to: '/student/login', label: 'My Dashboard' },
   { to: '/admin', label: 'Admin' },
 ];
 

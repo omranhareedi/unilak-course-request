@@ -146,7 +146,10 @@ export default function Apply() {
       </form>
 
       <p className="text-center text-sm text-gray-400 mt-6">
-        Already submitted? <Link to="/status" className="text-unilak-green font-medium hover:underline">Check your status</Link>
+        Already submitted?{' '}
+        <Link to="/student/login" className="text-unilak-green font-medium hover:underline">Manage your requests</Link>
+        {' | '}
+        <Link to="/status" className="text-unilak-green font-medium hover:underline">Check status</Link>
       </p>
     </div>
   );

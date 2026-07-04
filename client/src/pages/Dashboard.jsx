@@ -104,7 +104,7 @@ export default function Dashboard() {
 
       <div className="max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 mb-6 overflow-x-auto">
-          {['all', 'pending', 'accepted', 'rejected'].map((s) => (
+          {['all', 'pending', 'accepted', 'rejected', 'cancelled'].map((s) => (
             <button
               key={s}
               onClick={() => setFilter(s)}
@@ -137,6 +137,7 @@ export default function Dashboard() {
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
                         app.status === 'pending' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
                         app.status === 'accepted' ? 'bg-green-100 text-green-800 border-green-200' :
+                        app.status === 'cancelled' ? 'bg-gray-100 text-gray-600 border-gray-200' :
                         'bg-red-100 text-red-800 border-red-200'
                       }`}>
                         {app.status}

@@ -77,10 +77,14 @@ router.patch('/:id/review', auth, async (req, res) => {
 
     const updated = App.updateStatus(req.params.id, status, adminNote);
 
-    if (status === 'accepted') {
-      await sendAcceptanceEmail(updated.email, updated.full_name, updated.department);
-    } else {
-      await sendRejectionEmail(updated.email, updated.full_name, updated.department, adminNote);
+    try {
+      if (status === 'accepted') {
+        await sendAcceptanceEmail(updated.email, updated.fullName, updated.department);
+      } else {
+        await sendRejectionEmail(updated.email, updated.fullName, updated.department, adminNote);
+      }
+    } catch {
+      console.log('Email notification failed (check EMAIL config in .env)');
     }
 
     res.json({ message: `Application ${status}`, application: updated });

@@ -4,6 +4,7 @@ import cors from 'cors';
 import { initDb } from './config/db.js';
 import applicationRoutes from './routes/applications.js';
 import adminRoutes from './routes/admin.js';
+import studentRoutes from './routes/students.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/api/applications', applicationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/students', studentRoutes);
 
 app.get('/api/health', (_, res) => res.json({ ok: true }));
 
