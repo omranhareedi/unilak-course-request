@@ -16,8 +16,8 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><a href="/queue" className="hover:text-white transition-colors">Join Queue</a></li>
               <li><a href="/queue/status" className="hover:text-white transition-colors">My Tokens</a></li>
-              <li><a href="/staff/login" className="hover:text-white transition-colors">Staff Login</a></li>
-              <li><a href="/admin" className="hover:text-white transition-colors">Admin Login</a></li>
+              <li><a href="/login" className="hover:text-white transition-colors">Staff Login</a></li>
+              <li><a href="/login" className="hover:text-white transition-colors">Admin Login</a></li>
             </ul>
           </div>
           <div>

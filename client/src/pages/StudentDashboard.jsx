@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import UnilakLogo from '../components/UnilakLogo';
 
 const statusStyles = {
@@ -11,41 +12,28 @@ const statusStyles = {
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
+  const { token, user, logout } = useAuth();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(null);
 
-  const token = localStorage.getItem('studentToken');
-  const reg = localStorage.getItem('studentReg');
-
-  useEffect(() => {
-    if (!token) {
-      navigate('/student/login');
-    }
-  }, [token, navigate]);
+  const reg = user?.registrationNumber || localStorage.getItem('studentReg');
 
   const fetchApplications = useCallback(async () => {
     try {
       const res = await fetch('/api/students/applications', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.status === 401) {
-        localStorage.removeItem('studentToken');
-        localStorage.removeItem('studentReg');
-        navigate('/student/login');
-        return;
-      }
+      if (res.status === 401) { logout(); navigate('/login'); return; }
       const data = await res.json();
       setApplications(data);
       setLoading(false);
     } catch {
       setLoading(false);
     }
-  }, [token, navigate]);
+  }, [token, logout, navigate]);
 
-  useEffect(() => {
-    if (token) fetchApplications();
-  }, [token, fetchApplications]);
+  useEffect(() => { fetchApplications(); }, [fetchApplications]);
 
   const handleCancel = async (id) => {
     setCancelling(id);
@@ -69,13 +57,7 @@ export default function StudentDashboard() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('studentToken');
-    localStorage.removeItem('studentReg');
-    navigate('/student/login');
-  };
-
-  if (!token) return null;
+  const handleLogout = () => { logout(); navigate('/login'); };
 
   return (
     <div className="min-h-screen bg-gray-50">

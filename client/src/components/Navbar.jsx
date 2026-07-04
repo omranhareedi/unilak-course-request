@@ -1,20 +1,33 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import UnilakLogo from './UnilakLogo';
 
-const links = [
-  { to: '/', label: 'Home' },
-  { to: '/queue', label: 'Join Queue' },
-  { to: '/queue/status', label: 'My Tokens' },
-  { to: '/student/login', label: 'My Dashboard' },
-  { to: '/staff/login', label: 'Staff' },
-  { to: '/admin', label: 'Admin' },
-  { to: '/display', label: 'Live Display' },
-];
+function getLinks(role) {
+  const base = [
+    { to: '/', label: 'Home' },
+    { to: '/queue', label: 'Join Queue' },
+    { to: '/queue/status', label: 'My Tokens' },
+    { to: '/display', label: 'Live Display' },
+  ];
+
+  if (!role) return [...base, { to: '/login', label: 'Login', highlight: true }];
+
+  if (role === 'student') return [...base, { to: '/student/dashboard', label: 'My Dashboard' }];
+  if (role === 'staff') return [...base, { to: '/staff/dashboard', label: 'Staff Dashboard' }];
+  return [...base, { to: '/admin/dashboard', label: 'Dashboard' }, { to: '/admin/analytics', label: 'Analytics' }];
+}
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+  const { role, user, isAuthenticated, logout } = useAuth();
+  const links = getLinks(role);
+
+  const handleLogout = () => {
+    setOpen(false);
+    logout();
+  };
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -31,14 +44,24 @@ export default function Navbar() {
                 key={l.to}
                 to={l.to}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === l.to
-                    ? 'bg-unilak-navy text-white'
-                    : 'text-gray-600 hover:text-unilak-navy hover:bg-gray-50'
+                  l.highlight
+                    ? 'bg-unilak-green text-white hover:bg-green-700'
+                    : pathname === l.to
+                      ? 'bg-unilak-navy text-white'
+                      : 'text-gray-600 hover:text-unilak-navy hover:bg-gray-50'
                 }`}
               >
                 {l.label}
               </Link>
             ))}
+            {isAuthenticated && (
+              <div className="flex items-center gap-3 ml-3 pl-3 border-l border-gray-200">
+                <span className="text-xs text-gray-400 capitalize">{role} — {user?.name || user?.email || ''}</span>
+                <button onClick={handleLogout} className="text-xs text-red-600 hover:text-red-800 font-medium">
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
 
           <button className="md:hidden p-2" onClick={() => setOpen(!open)}>
@@ -60,14 +83,21 @@ export default function Navbar() {
                 to={l.to}
                 onClick={() => setOpen(false)}
                 className={`block px-4 py-2 rounded-lg text-sm font-medium ${
-                  pathname === l.to
-                    ? 'bg-unilak-navy text-white'
-                    : 'text-gray-600 hover:bg-gray-50'
+                  l.highlight
+                    ? 'bg-unilak-green text-white'
+                    : pathname === l.to
+                      ? 'bg-unilak-navy text-white'
+                      : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
                 {l.label}
               </Link>
             ))}
+            {isAuthenticated && (
+              <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-red-600 font-medium hover:bg-red-50 rounded-lg">
+                Logout ({user?.name || user?.email || role})
+              </button>
+            )}
           </div>
         )}
       </div>

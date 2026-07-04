@@ -57,9 +57,9 @@ export default function Home() {
               <h3 className="font-bold text-unilak-navy mb-1">Live Display</h3>
               <p className="text-sm text-gray-500">See current tokens on the big screen.</p>
             </Link>
-            <Link to="/staff/login" className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all block">
-              <h3 className="font-bold text-unilak-navy mb-1">Staff</h3>
-              <p className="text-sm text-gray-500">Manage your queue.</p>
+            <Link to="/login" className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all block">
+              <h3 className="font-bold text-unilak-navy mb-1">Staff / Admin Login</h3>
+              <p className="text-sm text-gray-500">Manage your queue or system.</p>
             </Link>
             <Link to="/apply" className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all block">
               <h3 className="font-bold text-unilak-navy mb-1">Course Request</h3>

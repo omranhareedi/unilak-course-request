@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function AdminAnalytics() {
-  const navigate = useNavigate();
+  const { token } = useAuth();
   const [campuses, setCampuses] = useState([]);
   const [depts, setDepts] = useState([]);
   const [selectedCampus, setSelectedCampus] = useState('');
@@ -10,12 +10,9 @@ export default function AdminAnalytics() {
   const [stats, setStats] = useState(null);
   const [tokens, setTokens] = useState([]);
 
-  const token = localStorage.getItem('token');
-
   useEffect(() => {
-    if (!token) navigate('/admin');
-    else fetch('/api/queue/campuses').then(r => r.json()).then(setCampuses);
-  }, [token, navigate]);
+    fetch('/api/queue/campuses').then(r => r.json()).then(setCampuses);
+  }, []);
 
   useEffect(() => {
     if (!selectedCampus) return;

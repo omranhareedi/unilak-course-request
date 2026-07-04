@@ -1,52 +1,30 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import UnilakLogo from '../components/UnilakLogo';
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { token, user, logout } = useAuth();
   const [applications, setApplications] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
-  const [adminEmail, setAdminEmail] = useState('');
-
-  const token = localStorage.getItem('token');
-
-  useEffect(() => {
-    if (!token) {
-      navigate('/admin');
-      return;
-    }
-  }, [token, navigate]);
 
   const fetchApplications = useCallback(async () => {
     try {
       const res = await fetch(`/api/applications/all?status=${filter}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.status === 401) {
-        localStorage.removeItem('token');
-        navigate('/admin');
-        return;
-      }
+      if (res.status === 401) { logout(); navigate('/login'); return; }
       const data = await res.json();
       setApplications(data);
       setLoading(false);
     } catch {
       setLoading(false);
     }
-  }, [filter, token, navigate]);
+  }, [filter, token, logout, navigate]);
 
-  useEffect(() => {
-    fetchApplications();
-  }, [fetchApplications]);
-
-  useEffect(() => {
-    if (!token) return;
-    fetch('/api/admin/me', { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => r.json())
-      .then((d) => d.email && setAdminEmail(d.email))
-      .catch(() => {});
-  }, [token]);
+  useEffect(() => { fetchApplications(); }, [fetchApplications]);
 
   const handleReview = async (id, status) => {
     try {
@@ -68,14 +46,9 @@ export default function Dashboard() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/admin');
-  };
+  const handleLogout = () => { logout(); navigate('/login'); };
 
   const pendingCount = applications.filter((a) => a.status === 'pending').length;
-
-  if (!token) return null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -84,7 +57,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold">Department Dashboard</h1>
-              <p className="text-gray-300 text-sm mt-1">{adminEmail && `Logged in as ${adminEmail}`}</p>
+              <p className="text-gray-300 text-sm mt-1">Logged in as {user?.email || 'Admin'}</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-center">

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { io } from 'socket.io-client';
 
 const statusStyles = {
@@ -10,6 +11,7 @@ const statusStyles = {
 
 export default function StaffDashboard() {
   const navigate = useNavigate();
+  const { token, user, logout } = useAuth();
   const [waiting, setWaiting] = useState([]);
   const [serving, setServing] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,29 +22,27 @@ export default function StaffDashboard() {
   const [transferForm, setTransferForm] = useState({ deptId: '', serviceId: '' });
   const socketRef = useRef(null);
 
-  const token = localStorage.getItem('staffToken');
-  const staffName = localStorage.getItem('staffName');
+  const staffName = user?.name || localStorage.getItem('staffName');
 
   useEffect(() => {
-    if (!token) { navigate('/staff/login'); return; }
     socketRef.current = io('http://localhost:5000');
     return () => socketRef.current?.disconnect();
-  }, [token, navigate]);
+  }, []);
 
   const fetchQueue = useCallback(async () => {
     try {
       const res = await fetch('/api/queue/staff/queue', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.status === 401) { localStorage.removeItem('staffToken'); navigate('/staff/login'); return; }
+      if (res.status === 401) { logout(); navigate('/login'); return; }
       const data = await res.json();
       setWaiting(data.waiting || []);
       setServing(data.serving || null);
       setLoading(false);
     } catch { setLoading(false); }
-  }, [token, navigate]);
+  }, [token, logout, navigate]);
 
-  useEffect(() => { if (token) fetchQueue(); }, [token, fetchQueue]);
+  useEffect(() => { fetchQueue(); }, [fetchQueue]);
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -86,13 +86,7 @@ export default function StaffDashboard() {
     setServices(await res.json());
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('staffToken');
-    localStorage.removeItem('staffName');
-    navigate('/staff/login');
-  };
-
-  if (!token) return null;
+  const handleLogout = () => { logout(); navigate('/login'); };
 
   return (
     <div className="min-h-screen bg-gray-50">
