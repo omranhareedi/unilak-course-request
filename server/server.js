@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import connectDB from './config/db.js';
+import { initDb } from './config/db.js';
 import applicationRoutes from './routes/applications.js';
 import adminRoutes from './routes/admin.js';
 
@@ -16,7 +16,7 @@ app.use('/api/admin', adminRoutes);
 
 app.get('/api/health', (_, res) => res.json({ ok: true }));
 
-await connectDB();
+await initDb();
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

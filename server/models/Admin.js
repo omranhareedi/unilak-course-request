@@ -1,30 +1,19 @@
-import mongoose from 'mongoose';
+import { randomUUID } from 'crypto';
 import bcrypt from 'bcryptjs';
+import { queryOne, run } from '../config/db.js';
 
-const adminSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    lowercase: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-}, {
-  timestamps: true,
-});
-
-adminSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 12);
-  next();
-});
-
-adminSchema.methods.comparePassword = async function (candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
+export const createAdmin = async (email, password) => {
+  const id = randomUUID();
+  const hashed = await bcrypt.hash(password, 12);
+  run('INSERT INTO admins (id, email, password) VALUES (?, ?, ?)', [id, email, hashed]);
+  return { id, email };
 };
 
-export default mongoose.model('Admin', adminSchema);
+export const findByEmail = (email) =>
+  queryOne('SELECT * FROM admins WHERE email = ?', [email]) || null;
+
+export const findById = (id) =>
+  queryOne('SELECT id, email, created_at FROM admins WHERE id = ?', [id]) || null;
+
+export const verifyPassword = async (candidate, hash) =>
+  bcrypt.compare(candidate, hash);

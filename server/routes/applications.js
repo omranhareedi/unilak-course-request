@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import Application from '../models/Application.js';
 import auth from '../middleware/auth.js';
+import * as App from '../models/Application.js';
 import { sendAcceptanceEmail, sendRejectionEmail, sendNewApplicationNotification } from '../utils/emailService.js';
 
 const router = Router();
@@ -13,11 +13,7 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const existing = await Application.findOne({
-      registrationNumber,
-      status: { $in: ['pending', 'accepted'] },
-    });
-
+    const existing = App.findPendingOrAcceptedByReg(registrationNumber);
     if (existing) {
       if (existing.status === 'accepted') {
         return res.status(400).json({ error: 'You already have an accepted application' });
@@ -25,7 +21,7 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'You already have a pending application. Please wait for a response.' });
     }
 
-    const application = await Application.create({
+    const application = App.createApplication({
       registrationNumber, email, fullName, department, message,
     });
 
@@ -37,33 +33,29 @@ router.post('/', async (req, res) => {
 
     res.status(201).json({
       message: 'Application submitted successfully. You will receive an email once it is reviewed.',
-      id: application._id,
+      id: application.id,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-router.get('/status', async (req, res) => {
+router.get('/status', (req, res) => {
   try {
     const { reg } = req.query;
     if (!reg) return res.status(400).json({ error: 'Registration number is required' });
 
-    const applications = await Application.find({ registrationNumber: reg })
-      .select('fullName department message status createdAt adminNote')
-      .sort({ createdAt: -1 });
-
+    const applications = App.findByReg(reg);
     res.json(applications);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-router.get('/all', auth, async (req, res) => {
+router.get('/all', auth, (req, res) => {
   try {
     const { status } = req.query;
-    const filter = status && status !== 'all' ? { status } : {};
-    const applications = await Application.find(filter).sort({ createdAt: -1 });
+    const applications = App.findAll(status);
     res.json(applications);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -77,23 +69,21 @@ router.patch('/:id/review', auth, async (req, res) => {
       return res.status(400).json({ error: 'Status must be "accepted" or "rejected"' });
     }
 
-    const application = await Application.findById(req.params.id);
+    const application = App.findById(req.params.id);
     if (!application) return res.status(404).json({ error: 'Application not found' });
     if (application.status !== 'pending') {
       return res.status(400).json({ error: `Application already ${application.status}` });
     }
 
-    application.status = status;
-    if (adminNote) application.adminNote = adminNote;
-    await application.save();
+    const updated = App.updateStatus(req.params.id, status, adminNote);
 
     if (status === 'accepted') {
-      await sendAcceptanceEmail(application.email, application.fullName, application.department);
+      await sendAcceptanceEmail(updated.email, updated.full_name, updated.department);
     } else {
-      await sendRejectionEmail(application.email, application.fullName, application.department, adminNote);
+      await sendRejectionEmail(updated.email, updated.full_name, updated.department, adminNote);
     }
 
-    res.json({ message: `Application ${status}`, application });
+    res.json({ message: `Application ${status}`, application: updated });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
