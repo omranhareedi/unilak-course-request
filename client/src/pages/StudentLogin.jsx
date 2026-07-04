@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import UnilakLogo from '../components/UnilakLogo';
 
 export default function StudentLogin() {
   const [registrationNumber, setRegistrationNumber] = useState('');
@@ -37,8 +38,8 @@ export default function StudentLogin() {
     <div className="min-h-[70vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-unilak-navy to-unilak-green flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
-            U
+          <div className="mx-auto mb-4">
+            <UnilakLogo size={60} showText={false} />
           </div>
           <h1 className="text-2xl font-bold text-unilak-navy">Student Login</h1>
           <p className="text-gray-500 text-sm mt-1">Sign in to manage your course requests</p>

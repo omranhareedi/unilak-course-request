@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import UnilakLogo from './UnilakLogo';
 
 const links = [
   { to: '/', label: 'Home' },
@@ -20,9 +21,7 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-unilak-navy to-unilak-green flex items-center justify-center text-white font-bold text-sm">
-              U
-            </div>
+            <UnilakLogo size={34} showText={false} />
             <span className="font-bold text-lg text-unilak-navy">UNILAK</span>
           </Link>
 

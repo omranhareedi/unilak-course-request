@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import UnilakLogo from '../components/UnilakLogo';
 
 const statusStyles = {
   pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
