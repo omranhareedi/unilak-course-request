@@ -1,48 +1,46 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const steps = ['Campus', 'Department', 'Service', 'Details', 'Queue'];
+const steps = ['Service', 'Details', 'Queue'];
 
 export default function StudentQueue() {
   const [step, setStep] = useState(0);
-  const [campuses, setCampuses] = useState([]);
-  const [departments, setDepartments] = useState([]);
+  const [campus, setCampus] = useState(null);
+  const [dept, setDept] = useState(null);
   const [services, setServices] = useState([]);
-  const [selected, setSelected] = useState({ campus: null, dept: null, service: null });
+  const [selectedService, setSelectedService] = useState(null);
   const [form, setForm] = useState({ studentReg: '', studentPhone: '', studentName: '' });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const [position, setPosition] = useState(0);
   const [wait, setWait] = useState(0);
   const [error, setError] = useState('');
 
-  useEffect(() => { fetch('/api/queue/campuses').then(r => r.json()).then(setCampuses); }, []);
-
-  const selectCampus = (c) => {
-    setSelected({ campus: c, dept: null, service: null });
-    setLoading(true);
-    fetch(`/api/queue/departments/${c.id}`).then(r => r.json()).then(d => {
-      setDepartments(d); setStep(1); setLoading(false);
+  useEffect(() => {
+    fetch('/api/queue/campuses').then(r => r.json()).then(campuses => {
+      if (campuses.length > 0) {
+        const c = campuses[0];
+        setCampus(c);
+        fetch(`/api/queue/departments/${c.id}`).then(r => r.json()).then(deps => {
+          const cis = deps.find(d => d.code === 'CIS');
+          if (cis) {
+            setDept(cis);
+            fetch(`/api/queue/services/${cis.id}`).then(r => r.json()).then(s => {
+              setServices(s); setLoading(false);
+            });
+          } else {
+            setLoading(false);
+          }
+        });
+      }
     });
-  };
-
-  const selectDept = (d) => {
-    setSelected(s => ({ ...s, dept: d, service: null }));
-    setLoading(true);
-    fetch(`/api/queue/services/${d.id}`).then(r => r.json()).then(s => {
-      setServices(s); setStep(2); setLoading(false);
-    });
-  };
-
-  const selectService = (s) => {
-    setSelected(prev => ({ ...prev, service: s }));
-    setStep(3);
-  };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.studentReg.trim()) return;
-    setLoading(true);
+    setSubmitting(true);
     setError('');
     try {
       const res = await fetch('/api/queue/join', {
@@ -52,9 +50,9 @@ export default function StudentQueue() {
           studentReg: form.studentReg,
           studentPhone: form.studentPhone,
           studentName: form.studentName,
-          campusId: selected.campus.id,
-          departmentId: selected.dept.id,
-          serviceId: selected.service.id,
+          campusId: campus.id,
+          departmentId: dept.id,
+          serviceId: selectedService.id,
         }),
       });
       const data = await res.json();
@@ -62,14 +60,14 @@ export default function StudentQueue() {
         setResult(data.token);
         setPosition(data.position);
         setWait(data.estimatedWaitMin);
-        setStep(4);
+        setStep(2);
       } else {
         setError(data.error);
       }
     } catch {
       setError('Network error');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -82,7 +80,6 @@ export default function StudentQueue() {
         <p className="text-gray-500 mt-1">Get your token and track your turn in real time</p>
       </div>
 
-      {/* Steps indicator */}
       <div className="flex items-center justify-center gap-2 mb-8">
         {steps.map((s, i) => (
           <div key={s} className="flex items-center gap-2">
@@ -93,7 +90,7 @@ export default function StudentQueue() {
             <span className={`text-xs hidden sm:inline ${i === step ? 'text-unilak-navy font-semibold' : 'text-gray-400'}`}>
               {s}
             </span>
-            {i < 4 && <div className={`w-6 h-0.5 ${i < step ? 'bg-unilak-green' : 'bg-gray-200'}`} />}
+            {i < 2 && <div className={`w-6 h-0.5 ${i < step ? 'bg-unilak-green' : 'bg-gray-200'}`} />}
           </div>
         ))}
       </div>
@@ -102,50 +99,16 @@ export default function StudentQueue() {
         <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm mb-6">{error}</div>
       )}
 
-      {/* Step 0: Campus */}
-      {step === 0 && (
-        <div>
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Select your campus</h2>
-          <div className="grid sm:grid-cols-3 gap-4">
-            {campuses.map(c => (
-              <button key={c.id} onClick={() => selectCampus(c)}
-                className="card text-center hover:border-unilak-navy hover:shadow-lg transition-all p-8">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-unilak-navy to-unilak-green
-                  flex items-center justify-center text-white font-bold text-lg mx-auto mb-3">
-                  {c.code}
-                </div>
-                <h3 className="font-semibold text-unilak-navy">{c.name}</h3>
-              </button>
-            ))}
-          </div>
-        </div>
+      {loading && (
+        <div className="text-center py-12 text-gray-400">Loading...</div>
       )}
 
-      {/* Step 1: Department */}
-      {step === 1 && (
+      {!loading && step === 0 && (
         <div>
-          <button onClick={goBack} className="text-sm text-gray-500 hover:text-unilak-navy mb-4">← Back to campuses</button>
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Select department</h2>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {departments.map(d => (
-              <button key={d.id} onClick={() => selectDept(d)}
-                className="card text-center hover:border-unilak-navy transition-all p-6">
-                <h3 className="font-semibold text-unilak-navy text-lg">{d.name}</h3>
-                <span className="text-xs text-gray-400">{d.code}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Step 2: Service */}
-      {step === 2 && (
-        <div>
-          <button onClick={goBack} className="text-sm text-gray-500 hover:text-unilak-navy mb-4">← Back to departments</button>
           <h2 className="text-lg font-semibold text-gray-700 mb-4">Select service</h2>
           <div className="grid gap-4">
             {services.map(s => (
-              <button key={s.id} onClick={() => selectService(s)}
+              <button key={s.id} onClick={() => { setSelectedService(s); setStep(1); }}
                 className="card flex items-center justify-between hover:border-unilak-navy transition-all">
                 <div>
                   <h3 className="font-semibold text-unilak-navy">{s.name}</h3>
@@ -154,17 +117,19 @@ export default function StudentQueue() {
                 <span className="text-unilak-green font-bold text-lg">{s.prefix}</span>
               </button>
             ))}
+            {services.length === 0 && (
+              <p className="text-center text-gray-400 py-8">No services available.</p>
+            )}
           </div>
         </div>
       )}
 
-      {/* Step 3: Details */}
-      {step === 3 && (
+      {step === 1 && (
         <div>
           <button onClick={goBack} className="text-sm text-gray-500 hover:text-unilak-navy mb-4">← Back to services</button>
           <div className="card">
             <div className="mb-4 p-3 bg-gray-50 rounded-lg text-sm">
-              <strong>{selected.campus.name}</strong> → {selected.dept.name} → {selected.service.name}
+              {dept?.name} → {selectedService?.name}
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -182,33 +147,28 @@ export default function StudentQueue() {
                 <input type="tel" value={form.studentPhone} onChange={e => setForm(f => ({ ...f, studentPhone: e.target.value }))}
                   placeholder="Optional — for SMS alerts" className="input-field" />
               </div>
-              <button type="submit" disabled={loading} className="btn-primary w-full">
-                {loading ? 'Getting your token...' : 'Get Token'}
+              <button type="submit" disabled={submitting} className="btn-primary w-full">
+                {submitting ? 'Getting your token...' : 'Get Token'}
               </button>
             </form>
           </div>
         </div>
       )}
 
-      {/* Step 4: Token live tracker */}
-      {step === 4 && result && (
+      {step === 2 && result && (
         <div className="text-center">
           <div className="card max-w-md mx-auto">
             <p className="text-sm text-gray-500 mb-2">Your Token</p>
             <div className="text-5xl font-extrabold text-unilak-navy mb-4 tracking-wider">{result.fullToken}</div>
             <div className="flex items-center justify-center gap-6 mb-6">
               <div className="text-center">
-                <div className="text-3xl font-bold text-unilak-green">{position + 1}</div>
-                <div className="text-xs text-gray-400">Position</div>
+                <div className="text-3xl font-bold text-unilak-green">{position}</div>
+                <div className="text-xs text-gray-400">Ahead of you</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-unilak-gold">{wait}</div>
                 <div className="text-xs text-gray-400">Est. min</div>
               </div>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
-              <div className="bg-unilak-green h-3 rounded-full transition-all duration-500"
-                style={{ width: `${Math.max(5, 100 - (position / (position + 5)) * 100)}%` }} />
             </div>
             <p className="text-sm text-gray-500">{result.department_name} — {result.service_name}</p>
             <p className="text-xs text-gray-400 mt-2">Stay nearby. You'll be called when it's your turn.</p>
