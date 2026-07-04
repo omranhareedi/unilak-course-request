@@ -1,15 +1,17 @@
 import { Router } from 'express';
 import auth from '../middleware/auth.js';
+import studentAuth from '../middleware/studentAuth.js';
 import * as App from '../models/Application.js';
 import { sendAcceptanceEmail, sendRejectionEmail, sendNewApplicationNotification } from '../utils/emailService.js';
 
 const router = Router();
 
-router.post('/', async (req, res) => {
+router.post('/', studentAuth, async (req, res) => {
   try {
-    const { registrationNumber, email, fullName, department, message } = req.body;
+    const { fullName, department, message } = req.body;
+    const { registrationNumber, email } = req.student;
 
-    if (!registrationNumber || !email || !fullName || !department || !message) {
+    if (!fullName || !department || !message) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 

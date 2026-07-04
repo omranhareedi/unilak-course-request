@@ -5,7 +5,7 @@ import UnilakLogo from '../components/UnilakLogo';
 
 const roles = [
   { key: 'student', label: 'Student', desc: 'Track your queue tokens' },
-  { key: 'staff', label: 'Staff', desc: 'Queue management, course requests &amp; analytics' },
+  { key: 'staff', label: 'Staff', desc: 'Queue management, requests &amp; analytics' },
 ];
 
 export default function Login() {

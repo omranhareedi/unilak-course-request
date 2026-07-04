@@ -48,7 +48,7 @@ export default function Home() {
 
       <section className="bg-gray-100 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-3 gap-4">
             <Link to="/queue" className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all block">
               <h3 className="font-bold text-unilak-navy mb-1">Join Queue</h3>
               <p className="text-sm text-gray-500">Get a token for any department.</p>
@@ -58,12 +58,8 @@ export default function Home() {
               <p className="text-sm text-gray-500">See current tokens on the big screen.</p>
             </Link>
             <Link to="/login" className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all block">
-              <h3 className="font-bold text-unilak-navy mb-1">Staff / Admin Login</h3>
-              <p className="text-sm text-gray-500">Manage your queue or system.</p>
-            </Link>
-            <Link to="/apply" className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all block">
-              <h3 className="font-bold text-unilak-navy mb-1">Course Request</h3>
-              <p className="text-sm text-gray-500">Submit a departmental request.</p>
+              <h3 className="font-bold text-unilak-navy mb-1">Login</h3>
+              <p className="text-sm text-gray-500">Student, staff &amp; administration access.</p>
             </Link>
           </div>
         </div>

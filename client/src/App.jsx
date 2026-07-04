@@ -24,7 +24,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/apply" element={<Apply />} />
+            <Route path="/apply" element={<ProtectedRoute role="student"><Apply /></ProtectedRoute>} />
             <Route path="/status" element={<Status />} />
             <Route path="/queue" element={<StudentQueue />} />
             <Route path="/queue/status" element={<QueueStatus />} />

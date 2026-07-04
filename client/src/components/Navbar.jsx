@@ -13,8 +13,8 @@ function getLinks(role) {
 
   if (!role) return [...base, { to: '/login', label: 'Login', highlight: true }];
 
-  if (role === 'student') return [...base, { to: '/student/dashboard', label: 'My Dashboard' }];
-  return [...base, { to: '/staff/dashboard', label: 'Queue' }, { to: '/staff/courses', label: 'Course Requests' }, { to: '/staff/analytics', label: 'Analytics' }];
+  if (role === 'student') return [...base, { to: '/student/dashboard', label: 'Dashboard' }, { to: '/apply', label: 'Submit Request' }];
+  return [...base, { to: '/staff/dashboard', label: 'Queue' }, { to: '/staff/courses', label: 'Requests' }, { to: '/staff/analytics', label: 'Analytics' }];
 }
 
 export default function Navbar() {

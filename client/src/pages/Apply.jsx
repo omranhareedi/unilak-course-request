@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const departments = [
   'Computer Science',
@@ -16,9 +17,8 @@ const departments = [
 ];
 
 export default function Apply() {
+  const { token, user } = useAuth();
   const [form, setForm] = useState({
-    registrationNumber: '',
-    email: '',
     fullName: '',
     department: '',
     message: '',
@@ -35,13 +35,13 @@ export default function Apply() {
     try {
       const res = await fetch('/api/applications', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(form),
       });
       const data = await res.json();
       if (res.ok) {
         setResult({ type: 'success', message: data.message });
-        setForm({ registrationNumber: '', email: '', fullName: '', department: '', message: '' });
+        setForm({ fullName: '', department: '', message: '' });
       } else {
         setResult({ type: 'error', message: data.error });
       }
@@ -55,8 +55,8 @@ export default function Apply() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
       <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-unilak-navy">Submit a Course Request</h1>
-        <p className="text-gray-500 mt-2">Fill in your details below and send your request to the department.</p>
+        <h1 className="text-3xl font-bold text-unilak-navy">Submit a Request</h1>
+        <p className="text-gray-500 mt-2">Fill in the details below and send your request to the department.</p>
       </div>
 
       {result && (
@@ -75,24 +75,18 @@ export default function Apply() {
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Registration Number</label>
             <input
               type="text"
-              name="registrationNumber"
-              value={form.registrationNumber}
-              onChange={handleChange}
-              placeholder="e.g. 2024/CS/001"
-              className="input-field"
-              required
+              value={user?.registrationNumber || ''}
+              className="input-field bg-gray-100"
+              disabled
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
             <input
               type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="you@unilak.ac.rw"
-              className="input-field"
-              required
+              value={user?.email || ''}
+              className="input-field bg-gray-100"
+              disabled
             />
           </div>
         </div>
@@ -134,7 +128,7 @@ export default function Apply() {
             value={form.message}
             onChange={handleChange}
             rows={5}
-            placeholder="Describe your request — which course(s) you want to join and why..."
+            placeholder="Describe your request..."
             className="input-field resize-y"
             required
           />
@@ -146,10 +140,7 @@ export default function Apply() {
       </form>
 
       <p className="text-center text-sm text-gray-400 mt-6">
-        Already submitted?{' '}
-        <Link to="/login" className="text-unilak-green font-medium hover:underline">Manage your requests</Link>
-        {' | '}
-        <Link to="/status" className="text-unilak-green font-medium hover:underline">Check status</Link>
+        <Link to="/student/dashboard" className="text-unilak-green font-medium hover:underline">Back to my dashboard</Link>
       </p>
     </div>
   );
