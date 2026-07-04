@@ -87,6 +87,17 @@ export default function Login() {
                   required
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+                <input
+                  type="password"
+                  value={form.password}
+                  onChange={(e) => setForm(f => ({ ...f, password: e.target.value }))}
+                  placeholder="Enter your password"
+                  className="input-field"
+                  required
+                />
+              </div>
             </>
           )}
 
@@ -119,9 +130,15 @@ export default function Login() {
           )}
 
           <button type="submit" disabled={loading} className="btn-primary w-full">
-            {loading ? 'Signing in...' : `Sign In as ${roles.find(r => r.key === tab)?.label}`}
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+        {tab === 'student' && (
+          <p className="text-center text-sm text-gray-400 mt-4">
+            No account?{' '}
+            <a href="/signup" className="text-unilak-green font-medium hover:underline">Sign up</a>
+          </p>
+        )}
       </div>
     </div>
   );

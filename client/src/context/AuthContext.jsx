@@ -25,7 +25,7 @@ export function AuthProvider({ children }) {
     let url, body;
     if (role === 'student') {
       url = '/api/students/login';
-      body = { registrationNumber: form.registrationNumber, email: form.email };
+      body = { registrationNumber: form.registrationNumber, email: form.email, password: form.password };
     } else {
       url = '/api/queue/staff/login';
       body = { email: form.email, password: form.password };

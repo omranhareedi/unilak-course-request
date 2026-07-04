@@ -1,21 +1,53 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import * as App from '../models/Application.js';
+import * as Student from '../models/Student.js';
 import studentAuth from '../middleware/studentAuth.js';
 
 const router = Router();
 
-router.post('/login', (req, res) => {
+router.post('/register', async (req, res) => {
   try {
-    const { registrationNumber, email } = req.body;
+    const { registrationNumber, email, password, fullName, phone } = req.body;
+    if (!registrationNumber || !email || !password || !fullName) {
+      return res.status(400).json({ error: 'Registration number, email, password, and full name are required' });
+    }
+
+    if (Student.findByReg(registrationNumber)) {
+      return res.status(400).json({ error: 'Registration number already registered' });
+    }
+    if (Student.findByEmail(email)) {
+      return res.status(400).json({ error: 'Email already registered' });
+    }
+
+    const student = await Student.create({ registrationNumber, email, password, fullName, phone });
+    const token = jwt.sign(
+      { registrationNumber, email },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.status(201).json({ token, student: { registrationNumber, email, fullName } });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/login', async (req, res) => {
+  try {
+    const { registrationNumber, email, password } = req.body;
     if (!registrationNumber || !email) {
       return res.status(400).json({ error: 'Registration number and email are required' });
     }
 
-    const applications = App.findByReg(registrationNumber);
-    const match = applications.find((a) => a.email === email);
-    if (!match) {
+    const student = Student.findByReg(registrationNumber);
+    if (!student || student.email !== email) {
       return res.status(401).json({ error: 'No match found for this registration number and email' });
+    }
+
+    if (password) {
+      const valid = await Student.verifyPassword(student, password);
+      if (!valid) return res.status(401).json({ error: 'Invalid password' });
     }
 
     const token = jwt.sign(
@@ -24,7 +56,7 @@ router.post('/login', (req, res) => {
       { expiresIn: '7d' }
     );
 
-    res.json({ token, student: { registrationNumber, email } });
+    res.json({ token, student: { registrationNumber, email, fullName: student.fullName } });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

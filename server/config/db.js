@@ -50,6 +50,14 @@ export const initDb = async () => {
     FOREIGN KEY (department_id) REFERENCES departments(id)
   )`);
 
+  db.run(`CREATE TABLE IF NOT EXISTS students (
+    id TEXT PRIMARY KEY, registration_number TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE, password TEXT NOT NULL,
+    full_name TEXT NOT NULL, phone TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  )`);
+
   db.run(`CREATE TABLE IF NOT EXISTS staff (
     id TEXT PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL, department_id TEXT NOT NULL,

@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Apply from './pages/Apply';
 import Status from './pages/Status';
 import Dashboard from './pages/Dashboard';
@@ -24,6 +25,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/apply" element={<ProtectedRoute role="student"><Apply /></ProtectedRoute>} />
             <Route path="/status" element={<Status />} />
             <Route path="/queue" element={<StudentQueue />} />
